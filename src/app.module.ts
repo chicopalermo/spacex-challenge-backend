@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DbModule } from './db/db.module';
 import { ConfigModule } from '@nestjs/config';
+import { LaunchesModule } from './launches/launches.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -14,7 +15,8 @@ import * as Joi from 'joi';
         MONGO_URI: Joi.string().required(),
         PORT: Joi.number().required()
       })
-    })
+    }),
+    LaunchesModule
   ],
   controllers: [AppController],
   providers: [AppService],
