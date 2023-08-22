@@ -1,15 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLaunchDto } from './dto/create-launch.dto';
 import { UpdateLaunchDto } from './dto/update-launch.dto';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom, map } from 'rxjs';
+import { LaunchDocument } from './models/launch.schema';
+import { LaunchesRepository } from './launches.repository';
 
 @Injectable()
 export class LaunchesService {
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly launchesRepository: LaunchesRepository
+  ) {}
+
+  async importLaunchData(): Promise<CreateLaunchDto[]> {
+    const launches: Promise<CreateLaunchDto[]> = await lastValueFrom(this.httpService.get('https://api.spacexdata.com/v5/launches').pipe(
+      map((res) => {
+        return res.data.map(launch => ({
+          _id: launch.id,
+          name: launch.name,
+          flight_number: launch.flight_number,
+          launch_date: launch.date_utc,
+          rocket: launch.rocket,
+          success: launch.success,
+          reused_cores: launch.cores[0].reused,
+          logo: launch.links?.patch.small,
+          youtube_id: launch.links.youtube_id
+        }));
+      })
+    )); 
+
+    return launches;
+  }
+
   create(createLaunchDto: CreateLaunchDto) {
-    return 'This action adds a new launch';
+    return this.launchesRepository.create(createLaunchDto);
   }
 
   findAll() {
-    return `This action returns all launches`;
+    return this.launchesRepository.findAll({});
   }
 
   findOne(id: number) {

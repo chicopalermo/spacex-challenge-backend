@@ -1,7 +1,7 @@
-import { Prop, Schema } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { AbstractDocument } from "src/db/abstract.schema";
 
-@Schema()
+@Schema({ versionKey: false })
 export class LaunchDocument extends AbstractDocument {
     @Prop()
     flight_number: number;
@@ -19,8 +19,13 @@ export class LaunchDocument extends AbstractDocument {
     success: boolean;
     
     @Prop()
-    used_cores: boolean;
+    reused_cores: boolean;
     
     @Prop()
     logo: string;
+
+    @Prop()
+    youtube_id: string;
 }
+
+export const LaunchSchema = SchemaFactory.createForClass(LaunchDocument);

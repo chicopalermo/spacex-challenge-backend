@@ -17,6 +17,11 @@ export class LaunchesController {
     return this.launchesService.findAll();
   }
 
+  @Get('/import')
+  import() {
+    return this.launchesService.importLaunchData()
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.launchesService.findOne(+id);

@@ -1,6 +1,11 @@
-import { IsBoolean, IsDate, IsInt, IsNotEmpty, IsString } from 'class-validator'
+import { IsBoolean, IsDateString, IsInt, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { Types } from 'mongoose';
 
 export class CreateLaunchDto {
+    @IsMongoId()
+    @IsOptional()
+    _id: Types.ObjectId;
+
     @IsInt()
     @IsNotEmpty()
     flight_number: number;
@@ -9,7 +14,7 @@ export class CreateLaunchDto {
     @IsNotEmpty()
     name: string;
     
-    @IsDate()
+    @IsDateString()
     @IsNotEmpty()
     launch_date: Date;
     
@@ -23,8 +28,11 @@ export class CreateLaunchDto {
     
     @IsBoolean()
     @IsNotEmpty()
-    used_cores: boolean;
+    reused_cores: boolean;
     
     @IsString()
     logo: string;
+
+    @IsString()
+    youtube_id: string;
 }
