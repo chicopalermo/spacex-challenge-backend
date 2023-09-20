@@ -13,8 +13,8 @@ export class LaunchesService {
     private readonly launchesRepository: LaunchesRepository
   ) {}
 
-  async importLaunchData(): Promise<CreateLaunchDto[]> {
-    const launches: Promise<CreateLaunchDto[]> = await lastValueFrom(this.httpService.get('https://api.spacexdata.com/v5/launches').pipe(
+  async importLaunchData() {
+    const apiLaunches = await lastValueFrom(this.httpService.get('https://api.spacexdata.com/v5/launches').pipe(
       map((res) => {
         return res.data.map(launch => ({
           _id: launch.id,
@@ -30,7 +30,13 @@ export class LaunchesService {
       })
     )); 
 
-    return launches;
+    const dbLaunches = await this.launchesRepository.findAll({});
+
+    const dbLaunchesIds = dbLaunches.map(obj => obj._id.toString());    
+
+    const newLaunches = apiLaunches.filter(obj => !dbLaunchesIds.includes(obj._id));
+      
+    return await this.launchesRepository.bulkCreate(newLaunches);
   }
 
   create(createLaunchDto: CreateLaunchDto) {

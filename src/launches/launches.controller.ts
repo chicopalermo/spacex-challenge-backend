@@ -17,7 +17,7 @@ export class LaunchesController {
     return this.launchesService.findAll();
   }
 
-  @Get('/import')
+  @Post('/import')
   import() {
     return this.launchesService.importLaunchData()
   }

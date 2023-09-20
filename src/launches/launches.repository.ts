@@ -9,4 +9,8 @@ export class LaunchesRepository extends AbstractRepository<LaunchDocument>{
     constructor(@InjectModel(LaunchDocument.name) private launchModel: Model<LaunchDocument>) {
         super(launchModel)
     }
+
+    async bulkCreate(launches: LaunchDocument[]): Promise<LaunchDocument[]> {
+        return this.launchModel.insertMany(launches)
+    }
 }
