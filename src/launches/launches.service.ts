@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { CreateLaunchDto } from './dto/create-launch.dto';
 import { UpdateLaunchDto } from './dto/update-launch.dto';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom, map } from 'rxjs';
 import { LaunchDocument } from './models/launch.schema';
 import { LaunchesRepository } from './launches.repository';
+import { CommonQueriesDto } from 'src/common/dto/queries.dto';
 
 @Injectable()
 export class LaunchesService {
@@ -32,7 +33,7 @@ export class LaunchesService {
 
     const dbLaunches = await this.launchesRepository.findAll({});
 
-    const dbLaunchesIds = dbLaunches.map(obj => obj._id.toString());    
+    const dbLaunchesIds = dbLaunches.results.map(obj => obj._id.toString());    
 
     const newLaunches = apiLaunches.filter(obj => !dbLaunchesIds.includes(obj._id));
       
@@ -45,6 +46,10 @@ export class LaunchesService {
 
   findAll() {
     return this.launchesRepository.findAll({});
+  }
+
+  findAllPaged(queries: CommonQueriesDto) {
+    return this.launchesRepository.findAllPaged(queries);
   }
 
   findOne(id: number) {

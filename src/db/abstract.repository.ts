@@ -10,6 +10,37 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     }
 
     async findAll(filterQuery: FilterQuery<TDocument>) {
-        return this.model.find(filterQuery, {}, { lean: true });
+        const docs = await this.model.find(filterQuery, {}, { lean: true });
+
+        return {
+            results: docs
+        }
+    }
+
+    async findAllPaged(filterQuery: FilterQuery<TDocument>) {
+        const totalDocs = await this.model.find(
+            filterQuery.search ? { name: { $regex: filterQuery.search, $options: 'i'} }: {}, 
+            {}, 
+            { lean: true }
+        ).count();
+
+        const totalPages = Math.ceil(totalDocs / filterQuery.limit);
+        
+        const skip = filterQuery.limit * (filterQuery.page - 1);
+
+        const docs = await this.model.find(
+            filterQuery.search ? { name: { $regex: filterQuery.search, $options: 'i'} }: {}, 
+            {}, 
+            { lean: true, limit: filterQuery.limit, skip }
+        );
+
+        return {
+            results: docs,
+            totalDocs,
+            page: filterQuery.page,
+            totalPages,
+            hasNext: totalPages > filterQuery.page,
+            hasPrev: filterQuery.page > 1
+        }
     }
 }

@@ -11,6 +11,6 @@ export class LaunchesRepository extends AbstractRepository<LaunchDocument>{
     }
 
     async bulkCreate(launches: LaunchDocument[]): Promise<LaunchDocument[]> {
-        return this.launchModel.insertMany(launches)
+        return this.launchModel.insertMany(launches);
     }
 }

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { LaunchesService } from './launches.service';
 import { CreateLaunchDto } from './dto/create-launch.dto';
 import { UpdateLaunchDto } from './dto/update-launch.dto';
+import { CommonQueriesDto } from 'src/common/dto/queries.dto';
 
 @Controller('launches')
 export class LaunchesController {
@@ -12,9 +13,14 @@ export class LaunchesController {
     return this.launchesService.create(createLaunchDto);
   }
 
-  @Get()
+  @Get('/all')
   findAll() {
     return this.launchesService.findAll();
+  }
+
+  @Get()
+  findAllPaged(@Query() queries: CommonQueriesDto) {
+    return this.launchesService.findAllPaged(queries);
   }
 
   @Post('/import')
