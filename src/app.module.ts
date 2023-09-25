@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { DbModule } from './db/db.module';
 import { ConfigModule } from '@nestjs/config';
 import { LaunchesModule } from './launches/launches.module';
+import { RocketsModule } from './rockets/rockets.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -16,7 +17,8 @@ import * as Joi from 'joi';
         PORT: Joi.number().required()
       })
     }),
-    LaunchesModule
+    LaunchesModule,
+    RocketsModule
   ],
   controllers: [AppController],
   providers: [AppService],
