@@ -17,6 +17,11 @@ export class RocketsController {
     return this.rocketsService.findAll();
   }
 
+  @Post('/import')
+  import() {
+    return this.rocketsService.importRocketData()
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.rocketsService.findOne(+id);

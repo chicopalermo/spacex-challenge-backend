@@ -3,6 +3,7 @@ import { CreateRocketDto } from './dto/create-rocket.dto';
 import { UpdateRocketDto } from './dto/update-rocket.dto';
 import { RocketsRepository } from './rockets.repository';
 import { HttpService } from '@nestjs/axios';
+import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class RocketsService {
@@ -10,6 +11,25 @@ export class RocketsService {
     private readonly httpService: HttpService,
     private readonly rocketsRepository: RocketsRepository
   ) {}
+
+  async importRocketData() {
+    const apiRockets = await lastValueFrom(this.httpService.get('https://api.spacexdata.com/v4/rockets').pipe(
+      map((res) => {
+        return res.data.map(rockets => ({
+          _id: rockets.id,
+          name: rockets.name
+        }));
+      })
+    )); 
+
+    const dbRockets = await this.rocketsRepository.findAll({});
+
+    const dbRocketsIds = dbRockets.results.map(obj => obj._id.toString());    
+
+    const newRockets = apiRockets.filter(obj => !dbRocketsIds.includes(obj._id));
+      
+    return await this.rocketsRepository.bulkCreate(newRockets);
+  }
 
   create(createRocketDto: CreateRocketDto) {
     return this.rocketsRepository.create(createRocketDto);
