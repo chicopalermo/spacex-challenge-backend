@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a backend challenge for a selective process using NestJS and consuming SpaceX API.
 
 ## Installation
 
