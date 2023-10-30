@@ -13,6 +13,7 @@ import { RocketsRepository } from './rockets.repository';
     DbModule.forFeature([{ name: RocketDocument.name, schema: RocketSchema}])
   ],
   controllers: [RocketsController],
-  providers: [RocketsService, RocketsRepository]
+  providers: [RocketsService, RocketsRepository],
+  exports: [RocketsService]
 })
 export class RocketsModule {}

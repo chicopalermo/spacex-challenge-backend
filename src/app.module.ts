@@ -6,9 +6,11 @@ import { ConfigModule } from '@nestjs/config';
 import { LaunchesModule } from './launches/launches.module';
 import { RocketsModule } from './rockets/rockets.module';
 import * as Joi from 'joi';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     DbModule,
     ConfigModule.forRoot({
       isGlobal: true,

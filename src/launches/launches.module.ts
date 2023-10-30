@@ -13,6 +13,7 @@ import { LaunchesRepository } from './launches.repository';
     DbModule.forFeature([{ name: LaunchDocument.name, schema: LaunchSchema}])
   ],
   controllers: [LaunchesController],
-  providers: [LaunchesService, LaunchesRepository]
+  providers: [LaunchesService, LaunchesRepository],
+  exports: [LaunchesService]
 })
 export class LaunchesModule {}
